@@ -407,10 +407,7 @@ async function addTextLayer(pageDiv, pageIndex) {
     textLayerDiv.style.position = 'absolute';
     textLayerDiv.style.inset = '0';
     textLayerDiv.style.zIndex = '5'; // Above canvas, below annotations
-    textLayerDiv.style.pointerEvents = 'auto'; // allow text selection
-    
-    // Stop flip events on the text layer so dragging to select text doesn't turn the page
-    stopFlipEvents(textLayerDiv);
+    textLayerDiv.style.pointerEvents = 'none'; // pass-through on empty areas; CSS enables it on spans only
     
     // The canvas was rendered at a higher scale for quality, but its CSS size is constrained by pageDiv.
     // The textLayer must be positioned using a viewport that matches the CSS size of pageDiv.
@@ -427,6 +424,16 @@ async function addTextLayer(pageDiv, pageIndex) {
         textLayerDiv.style.height = textVp.height + 'px';
         
         pageDiv.appendChild(textLayerDiv);
+
+        // Targeted event blocking: only stop flip when drag starts on a text span.
+        // Clicks/swipes on blank page areas pass through to StPageFlip for page turning.
+        const stopIfOnText = (e) => {
+            if (e.target && e.target.tagName === 'SPAN') {
+                e.stopPropagation();
+            }
+        };
+        textLayerDiv.addEventListener('mousedown',  stopIfOnText);
+        textLayerDiv.addEventListener('touchstart', stopIfOnText, { passive: true });
 
         if (pdfjsLib.renderTextLayer) {
             pdfjsLib.renderTextLayer({
