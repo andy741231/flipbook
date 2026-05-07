@@ -1,0 +1,728 @@
+/* ========================================
+   Flipbook Viewer Specific Styles
+   ======================================== */
+
+.viewer-wrapper {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at center, #1e2240 0%, #0f1120 100%);
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.flipbook-stage {
+    flex: 1;
+    min-height: 0;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 1rem;
+}
+
+/* Book container with 3D perspective + drop shadow */
+.flipbook-container {
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.1s ease;
+    filter: drop-shadow(0 24px 48px rgba(0, 0, 0, 0.6));
+}
+
+/* Individual pages */
+.stf__parent {
+    margin: 0 auto;
+}
+
+/* Page styling within StPageFlip */
+.page-wrapper {
+    background: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.page-wrapper canvas {
+    display: block;
+}
+
+/* Text layer for search/selection */
+.page-text-layer {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    opacity: 0.25;
+    line-height: 1;
+    pointer-events: none;
+}
+.page-text-layer span {
+    position: absolute;
+    white-space: pre;
+    color: transparent;
+    pointer-events: all;
+    cursor: text;
+}
+.page-text-layer span::selection {
+    background: rgba(0, 100, 200, 0.3);
+}
+
+/* Annotation (link) layer */
+.page-annotation-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+.page-annotation-layer a,
+.page-annotation-layer .internal-link {
+    position: absolute;
+    pointer-events: all;
+    cursor: pointer;
+}
+.page-annotation-layer a {
+    border-bottom: 1px dashed rgba(0, 100, 200, 0.3);
+}
+.page-annotation-layer a:hover,
+.page-annotation-layer .internal-link:hover {
+    background: rgba(0, 100, 200, 0.1);
+    border-radius: 2px;
+}
+
+/* Video overlay on pages */
+.page-video-overlay {
+    position: absolute;
+    z-index: 15;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    transition: box-shadow 0.2s ease;
+}
+.page-video-overlay:hover {
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+}
+.page-video-overlay iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+.page-video-overlay .video-play-trigger {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 0.5rem;
+    background: rgba(0,0,0,0.65);
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.page-video-overlay .video-play-trigger:hover {
+    background: rgba(0,0,0,0.45);
+}
+.page-video-overlay .video-play-trigger i {
+    font-size: 2.5rem;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+.page-video-overlay .video-play-trigger span {
+    font-size: 0.75rem;
+    font-weight: 500;
+    opacity: 0.8;
+}
+.page-video-overlay .video-thumb-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+}
+
+/* Page shadow effect */
+.stf__item {
+    box-shadow: 0 0 20px rgba(0,0,0,0.15);
+}
+
+/* Soft page edge gradient */
+.page-edge-shadow {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 20px;
+    pointer-events: none;
+    z-index: 5;
+}
+.page-edge-shadow.left {
+    right: 0;
+    background: linear-gradient(to left, rgba(0,0,0,0.08), transparent);
+}
+.page-edge-shadow.right {
+    left: 0;
+    background: linear-gradient(to right, rgba(0,0,0,0.08), transparent);
+}
+
+/* Search highlight */
+.search-highlight {
+    background: rgba(255, 235, 59, 0.5);
+    border-radius: 2px;
+    position: absolute;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* Page number indicator */
+.page-number-indicator {
+    position: absolute;
+    bottom: 8px;
+    font-size: 0.6875rem;
+    color: var(--gray-400);
+    padding: 2px 8px;
+    background: rgba(255,255,255,0.8);
+    border-radius: 4px;
+    pointer-events: none;
+}
+.page-number-indicator.left { left: 8px; }
+.page-number-indicator.right { right: 8px; }
+
+/* Loading overlay dark-context styles */
+.loading-overlay {
+    background: rgba(10, 12, 28, 0.92) !important;
+    color: white;
+}
+
+.loading-overlay p {
+    color: rgba(255, 255, 255, 0.7) !important;
+    font-size: 0.8125rem;
+    letter-spacing: 0.02em;
+}
+
+.loading-book-icon {
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 0.75rem;
+    animation: bookPulse 1.4s ease-in-out infinite;
+}
+
+@keyframes bookPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.92); }
+}
+
+.loading-bar-wrap {
+    width: 200px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 0.75rem;
+}
+
+.loading-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--primary);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+/* Cover page hint */
+.cover-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 0.8125rem;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    white-space: nowrap;
+}
+
+.cover-hint.visible {
+    opacity: 1;
+}
+
+.cover-hint i {
+    animation: nudgeRight 1.5s ease-in-out infinite;
+}
+
+@keyframes nudgeRight {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(5px); }
+}
+
+/* Keyboard shortcuts hint */
+.keyboard-hint {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.7);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    white-space: nowrap;
+}
+.keyboard-hint.visible { opacity: 1; }
+.keyboard-hint kbd {
+    background: rgba(255,255,255,0.2);
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin: 0 2px;
+    font-family: inherit;
+}
+
+/* Thumbnail strip (bottom) */
+.thumbnail-strip {
+    height: 80px;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 1rem;
+    overflow-x: auto;
+    flex-shrink: 0;
+}
+.thumbnail-strip::-webkit-scrollbar { height: 4px; }
+.thumbnail-strip::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 2px; }
+
+.thumbnail-item {
+    flex-shrink: 0;
+    width: 50px;
+    height: 64px;
+    background: white;
+    border-radius: 3px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+    overflow: hidden;
+    opacity: 0.6;
+}
+.thumbnail-item:hover { opacity: 0.9; }
+.thumbnail-item.active {
+    border-color: var(--primary);
+    opacity: 1;
+    transform: scale(1.05);
+}
+.thumbnail-item canvas {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .viewer-toolbar .toolbar-center { gap: 0.25rem; }
+    .viewer-toolbar .toolbar-right { gap: 0.25rem; }
+    .viewer-toolbar .btn-sm { padding: 0.25rem 0.5rem; }
+    .nav-arrow { width: 36px; height: 36px; font-size: 1rem; }
+    .nav-arrow.prev { left: 0.25rem; }
+    .nav-arrow.next { right: 0.25rem; }
+    .thumbnail-strip { height: 60px; }
+    .thumbnail-item { width: 36px; height: 48px; }
+    #btnZoomIn, #btnZoomOut, #zoomLevel { display: none; }
+}
+
+/* Print styles - hide viewer UI */
+@media print {
+    .viewer-toolbar, .nav-arrow, .search-panel, .toc-panel, .thumbnail-strip { display: none !important; }
+    .viewer-wrapper { position: static; background: white; }
+}
+
+/* ---- Edit Mode Panel ---- */
+.edit-panel {
+    flex: 0 0 auto;
+    width: 0;
+    overflow: hidden;
+    background: white;
+    border-left: 0 solid var(--gray-200);
+    box-shadow: none;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                border-left-width 0s 0.3s,
+                box-shadow 0.3s;
+    z-index: 110;
+    align-self: stretch;
+}
+
+.edit-panel.open {
+    width: 300px;
+    border-left-width: 1px;
+    box-shadow: -6px 0 24px rgba(0, 0, 0, 0.18);
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                border-left-width 0s,
+                box-shadow 0.3s;
+}
+
+.edit-panel-inner {
+    min-width: 300px;
+    width: 300px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.edit-panel-header {
+    padding: 0.875rem 1rem;
+    background: var(--gray-900);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.edit-panel-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    color: white;
+}
+
+.edit-panel-title i {
+    color: #fbbf24;
+}
+
+.edit-panel-close {
+    color: rgba(255, 255, 255, 0.6);
+    background: transparent;
+    border: none;
+}
+
+.edit-panel-close:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.edit-panel-page-badge {
+    padding: 0.5rem 1rem;
+    background: #fef3c7;
+    border-bottom: 1px solid #fde68a;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: #92400e;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    flex-shrink: 0;
+}
+
+.edit-panel-page-badge i {
+    color: #d97706;
+}
+
+.edit-panel-body {
+    padding: 1rem;
+    overflow-y: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+}
+
+.edit-tips {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: var(--gray-50);
+    border-radius: 8px;
+    border: 1px solid var(--gray-200);
+}
+
+.edit-tip {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    font-size: 0.8125rem;
+    color: var(--gray-600);
+}
+
+.edit-tip i {
+    width: 14px;
+    color: var(--gray-400);
+    flex-shrink: 0;
+    text-align: center;
+}
+
+.edit-tip.warning {
+    color: #92400e;
+    background: #fef3c7;
+    padding: 0.375rem 0.5rem;
+    border-radius: 4px;
+    margin-top: 0.25rem;
+}
+
+.edit-tip.warning i {
+    color: #d97706;
+}
+
+.edit-panel-footer {
+    padding: 0.875rem 1rem;
+    border-top: 1px solid var(--gray-200);
+    background: var(--gray-50);
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.edit-panel-footer .btn {
+    flex: 1;
+}
+
+/* ---- Edit Mode Stage Indicators ---- */
+.viewer-wrapper.edit-mode .flipbook-stage {
+    box-shadow: inset 0 0 0 3px rgba(251, 191, 36, 0.55);
+}
+
+.edit-mode-banner {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(217, 119, 6, 0.92);
+    backdrop-filter: blur(4px);
+    color: white;
+    padding: 0.25rem 1.25rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-radius: 0 0 10px 10px;
+    pointer-events: none;
+    z-index: 60;
+    display: none;
+    align-items: center;
+    gap: 0.375rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.viewer-wrapper.edit-mode .edit-mode-banner {
+    display: flex;
+}
+
+/* ---- Video Resize Handles ---- */
+.video-resize-handle {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: var(--primary);
+    border: 2px solid white;
+    border-radius: 2px;
+    z-index: 20;
+    display: none;
+}
+
+.viewer-wrapper.edit-mode .video-overlay .video-resize-handle {
+    display: block;
+}
+
+.video-resize-handle.se { bottom: -6px; right: -6px; cursor: se-resize; }
+.video-resize-handle.sw { bottom: -6px; left: -6px; cursor: sw-resize; }
+.video-resize-handle.ne { top: -6px; right: -6px; cursor: ne-resize; }
+.video-resize-handle.nw { top: -6px; left: -6px; cursor: nw-resize; }
+
+.viewer-wrapper.edit-mode .video-overlay {
+    cursor: move;
+    border: 2px dashed var(--primary);
+}
+
+.viewer-wrapper.edit-mode .video-overlay:hover {
+    border-color: var(--primary-dark);
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+.viewer-wrapper.edit-mode .video-overlay::after {
+    content: 'Drag to reposition';
+    position: absolute;
+    top: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--primary);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.viewer-wrapper.edit-mode .video-overlay:hover::after {
+    opacity: 1;
+}
+
+.video-overlay.dragging {
+    opacity: 0.7;
+    z-index: 1000;
+}
+
+.video-delete-btn {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--danger);
+    color: white;
+    border: 2px solid white;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.75rem;
+    z-index: 10;
+}
+
+.viewer-wrapper.edit-mode .video-overlay .video-delete-btn {
+    display: flex;
+}
+
+.video-delete-btn:hover {
+    background: #dc2626;
+    transform: scale(1.1);
+}
+
+/* ---- Link Overlays ---- */
+.link-overlay {
+    position: absolute;
+    z-index: 15;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    padding: 0 0.6rem;
+    background: rgba(59, 130, 246, 0.88);
+    color: white;
+    font-size: 0.72rem;
+    font-weight: 600;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+    user-select: none;
+}
+
+.link-overlay:hover {
+    background: rgba(37, 99, 235, 0.95);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+    transform: scale(1.03);
+}
+
+.link-overlay i {
+    font-size: 0.65rem;
+    flex-shrink: 0;
+}
+
+/* Edit mode — link overlays get same dashed border + drag cursor */
+.viewer-wrapper.edit-mode .link-overlay {
+    cursor: move;
+    border: 2px dashed rgba(255,255,255,0.7);
+    background: rgba(59, 130, 246, 0.75);
+}
+
+.viewer-wrapper.edit-mode .link-overlay .video-resize-handle {
+    display: block;
+}
+
+.viewer-wrapper.edit-mode .link-overlay .video-delete-btn {
+    display: flex;
+}
+
+/* ---- Search Highlight Overlay ---- */
+.search-highlight-overlay {
+    position: absolute;
+    pointer-events: none;
+    z-index: 20;
+    background: rgba(253, 224, 71, 0.55);
+    border-radius: 3px;
+    box-shadow: 0 0 0 2px rgba(234, 179, 8, 0.5);
+}
+
+/* ---- TOC Edit Modal Rows ---- */
+.toc-edit-modal {
+    max-width: 520px;
+    width: 95vw;
+}
+
+.toc-edit-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--gray-100);
+}
+
+.toc-edit-row:last-child { border-bottom: none; }
+
+.toc-edit-input {
+    flex: 1;
+    min-width: 0;
+    padding: 0.35rem 0.6rem;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius);
+    font-size: 0.875rem;
+    font-family: inherit;
+    background: white;
+    color: var(--gray-800);
+    transition: border-color 0.15s;
+}
+
+.toc-edit-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
+}
+
+.toc-edit-page {
+    width: 58px;
+    flex-shrink: 0;
+    padding: 0.35rem 0.4rem;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius);
+    font-size: 0.875rem;
+    font-family: inherit;
+    text-align: center;
+    background: white;
+    color: var(--gray-800);
+}
+
+.toc-edit-page:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
+}
+
+.toc-edit-actions {
+    display: flex;
+    gap: 0.15rem;
+    flex-shrink: 0;
+}
+
+/* ---- TOC panel header tweaks ---- */
+.toc-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Add Link / TOC edit modals reuse .add-video-modal width */
+.add-link-modal {
+    max-width: 400px;
+    width: 95vw;
+}

@@ -1,0 +1,26 @@
+# Apache fallback (if not using IIS)
+DirectoryIndex index.php
+
+# Block access to sensitive files
+<FilesMatch "\.(sql|md)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+<FilesMatch "^config\.php$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Deny access to includes directory
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^includes/ - [F,L]
+    RewriteRule ^\.windsurf/ - [F,L]
+    RewriteRule ^sql/ - [F,L]
+</IfModule>
+
+# Allow large uploads
+php_value upload_max_filesize 100M
+php_value post_max_size 105M
+php_value max_execution_time 300
