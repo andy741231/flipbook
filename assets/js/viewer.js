@@ -166,7 +166,7 @@ async function loadPDF(url) {
             height: item.height
         }));
         const fullText = textContent.items.map(item => item.str).join(' ');
-        pageTexts.push({ items: textItems, fullText, viewport: vp });
+        pageTexts.push({ items: textItems, fullText, viewport: vp, rawTextContent: textContent });
     }
 
     updateLoading('Finalizing...', 95);
@@ -275,6 +275,9 @@ function initPageFlip(pageW, pageH) {
 
         // Add annotation (link) layer
         addAnnotationLayer(pageDiv, i);
+
+        // Add text selection layer
+        addTextLayer(pageDiv, i);
 
         // Add video overlays if any
         addVideoOverlays(pageDiv, i + 1, pageW, pageH);
@@ -393,6 +396,49 @@ function stopFlipEvents(el) {
     el.addEventListener('mouseup',    stop);
     el.addEventListener('touchstart', stop, { passive: true });
     el.addEventListener('touchend',   stop, { passive: true });
+}
+
+async function addTextLayer(pageDiv, pageIndex) {
+    const pageData = pageTexts[pageIndex];
+    if (!pageData || !pageData.rawTextContent) return;
+
+    const textLayerDiv = document.createElement('div');
+    textLayerDiv.className = 'textLayer';
+    textLayerDiv.style.position = 'absolute';
+    textLayerDiv.style.inset = '0';
+    textLayerDiv.style.zIndex = '5'; // Above canvas, below annotations
+    textLayerDiv.style.pointerEvents = 'auto'; // allow text selection
+    
+    // Stop flip events on the text layer so dragging to select text doesn't turn the page
+    stopFlipEvents(textLayerDiv);
+    
+    // The canvas was rendered at a higher scale for quality, but its CSS size is constrained by pageDiv.
+    // The textLayer must be positioned using a viewport that matches the CSS size of pageDiv.
+    try {
+        const page = await pdfDoc.getPage(pageIndex + 1);
+        const unscaledVp = page.getViewport({ scale: 1 });
+        const container = document.getElementById('flipbookContainer');
+        const targetHeight = parseFloat(container.dataset.baseHeight);
+        const targetScale = targetHeight / unscaledVp.height;
+        const textVp = page.getViewport({ scale: targetScale });
+        
+        // Ensure the textLayer perfectly covers the pageDiv
+        textLayerDiv.style.width = textVp.width + 'px';
+        textLayerDiv.style.height = textVp.height + 'px';
+        
+        pageDiv.appendChild(textLayerDiv);
+
+        if (pdfjsLib.renderTextLayer) {
+            pdfjsLib.renderTextLayer({
+                textContentSource: pageData.rawTextContent,
+                container: textLayerDiv,
+                viewport: textVp,
+                textDivs: []
+            });
+        }
+    } catch(e) {
+        console.warn('Failed to render text layer on page', pageIndex + 1, e);
+    }
 }
 
 async function addAnnotationLayer(pageDiv, pageIndex) {
