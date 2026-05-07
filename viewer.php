@@ -22,8 +22,8 @@ if (empty($slug)) {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/app.css">
-    <link rel="stylesheet" href="assets/css/viewer.css">
+    <link rel="stylesheet" href="assets/css/app.css?v=<?= time() ?>">
+    <link rel="stylesheet" href="assets/css/viewer.css?v=<?= time() ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf_viewer.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script>
@@ -329,8 +329,8 @@ if (empty($slug)) {
 
     <div class="toast-container" id="toastContainer"></div>
 
-    <script src="assets/js/flip-sound.js"></script>
-    <script src="assets/js/viewer.js"></script>
+    <script src="assets/js/flip-sound.js?v=<?= time() ?>"></script>
+    <script src="assets/js/viewer.js?v=<?= time() ?>"></script>
     <script>
         const SLUG = '<?= addslashes($slug) ?>';
         const BASE = '<?= BASE_PATH ?>';
